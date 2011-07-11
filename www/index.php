@@ -26,7 +26,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <!-- R-Forge Logo -->
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr><td>
-<a href="http://r-forge.r-project.org/"><img src="http://<?php echo $themeroot; ?>/images/logo.png" border="0" alt="R-Forge Logo" /> </a> </td> </tr>
+<a href="/"><img src="http://r-forge.r-project.org/themes/rforge//images/logo.png" border="0" alt="R-Forge Logo" /> </a> </td> </tr>
 </table>
 
 
@@ -43,7 +43,7 @@ echo $contents; } ?>
 
 <!-- end of project description -->
 
-<p> This is a project launched by Abbas Khalili and Vahid Partovi Nia. </p>
+<p> This is a project launched by Abbas Khalili and Vahid Partovi Nia to fit mixture of expert models and simulatneously select important variables through the LASSO or SCAD penalization. </p>
 
 <img src="expert1.png" width="589" height="558" alt="" />
 
