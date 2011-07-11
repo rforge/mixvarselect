@@ -45,6 +45,8 @@ echo $contents; } ?>
 
 <p> This is a project launched by Abbas Khalili and Vahid Partovi Nia. </p>
 
+<img src="expert1.png" width="589" height="558" alt="" />
+
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
 </body>
