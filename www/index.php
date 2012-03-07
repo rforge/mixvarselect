@@ -43,9 +43,15 @@ echo $contents; } ?>
 
 <!-- end of project description -->
 
-<p> This is a project launched by Abbas Khalili and Vahid Partovi Nia to fit mixture of expert models and simulatneously select important variables through the LASSO or SCAD penalization. </p>
-
+<p> This project has been launched to fit mixture of expert models and simultaneously select important variables through regularization. The related statistical articles are</p>
+<p>Khalili, A. and Chen, J. (2007). Variable Selection in Finite Mixture of Regression Models.
+        Journal of the American Statistical Association, 102, 1025-1038. </p>
+<p>Khalili, A. (2010). New Estimation and Feature Selection Methods in Mixture-of-Experts Models.
+        The Canadian Journal of Statistics, 38, 519-539. </p> 
+<p>The current developers are <a href="http://vahid.probstat.ca/"><strong>Vahid Partovi Nia</strong></a> and <a href="http://www.math.mcgill.ca/khalili/"><strong>Abbas Khalili</strong></a>. </p>
+<div style="text-align: center"> 
 <img src="expert1.png" width="589" height="558" alt="" />
+</div>
 
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
