@@ -1,11 +1,11 @@
 Package: mixvarselect
 Type: Package
 Title: Mixture of expert modelling with variable selection using penalization
-Version: 1.0
-Date: 2012-03-07
+Version: 1.1
+Date: 2014-08-20
 Author: Vahid Partovi Nia and Abbas Khalili
 Maintainer: Vahid Partovi Nia <vahid.partovinia@polymtl.ca>
-Depends: R (>= 2.14.1)
+Depends: R (>= 3.1.1)
 Description: The package uses Ridge, Lasso and SCAD penlization to implement variable selection and regularization in various parameters of mixutres of Gaussians. The package offers variable selection for the mean compoenents and logit of mixture proportions. The package requires installation of GSL libraries on the machine and may not work under Windows platform.
 License:  GPL (>= 2)
 
