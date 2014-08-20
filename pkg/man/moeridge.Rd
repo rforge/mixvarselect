@@ -46,10 +46,6 @@ The choice of initial values is crucial. A common variance is assumed. Maximized
 A good choice of penalization constant is proved to be of order log of sample size. This function requires installation of GSL libraries on the machine and may not work under Windows platform.
 }
 
-%%\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-%%}
-
 \examples{
 data(moesim)
 moeridge(moesim$y,moesim$x)

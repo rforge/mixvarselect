@@ -1,11 +1,11 @@
 /* for Abbas: some of unecessary libraries are deleted */
 
+#include <Rmath.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-
+/*#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>*/
 /*************List of global variables********/
 
 
@@ -278,7 +278,8 @@ for(i1=0;i1<nsize;i1++)
 	mui = 0.0;
 	for(j=0;j<NCOV;j++)
 	  mui += multX[i][j]*beta0[j][k1];
-	deni = gsl_ran_gaussian_pdf(resp[i]-mui,sig1);
+/*	deni = gsl_ran_gaussian_pdf(resp[i]-mui,sig1);*/
+	deni = dnorm(resp[i]-mui,0,sig1,0);
 	phi[i][k1] = Mat_pi[i][k1]*deni;
 	sumi += phi[i][k1];
       }
