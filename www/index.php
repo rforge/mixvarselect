@@ -48,8 +48,8 @@ echo $contents; } ?>
         Journal of the American Statistical Association, 102, 1025-1038. </p>
 <p>Khalili, A. (2010). New Estimation and Feature Selection Methods in Mixture-of-Experts Models.
         The Canadian Journal of Statistics, 38, 519-539. </p> 
-<p>The current developers are <a href="http://vahid.probstat.ca/"><strong>Vahid Partovi Nia</strong></a>, 
-<a href="http://www.math.mcgill.ca/khalili/"><strong>Abbas Khalili</strong></a> and <a href="delphine.html"><strong>Delphine Savignard</strong></a>. </p>
+<p>The current developers are <a href="http://vahid.probstat.ca/"><strong>Vahid Partovi Nia</strong></a> and  
+<a href="http://www.math.mcgill.ca/khalili/"><strong>Abbas Khalili</strong></a>. </p>
 <div style="text-align: center"> 
 <img src="expert1.png" width="589" height="558" alt="" />
 </div>
