@@ -8,18 +8,102 @@
 #include <gsl/gsl_randist.h>*/
 /*************List of global variables********/
 
+int MAXTotal1=15;
+void maxabs(int row, int n, double a[][MAXTotal1], int *checksin, int *maxrow)
+{
+    double max =0;
+    int loc_maxrow, loc_checksin;
+    int i;
+    
+    loc_maxrow=row;
+    loc_checksin = 1;
+    for (i= row; i<n ;i++) {
+        if ( fabs(a[i][row]) > max) {
+            max = fabs(a[i][row]);
+            loc_maxrow =i;
+        }
+        
+        if (max == 0) {
+            loc_checksin = 0;
+            break;
+        }
+    }
+    
+    maxrow[0]   = loc_maxrow;
+    checksin[0] = loc_checksin;
+}
+
+void gauss(int n, double a[][MAXTotal1], int *checksin)
+{
+    int i,j,k;
+    int k_vec[1];
+    double temp;
+    
+    k = 0;
+    for (i=0;i<n;i++) {
+        maxabs(i, n, a, checksin, k_vec);
+        k=k_vec[0];
+        
+        if (checksin[0] == 0) {
+            break;
+        }
+        if ( k != i)
+            for ( j=i;j<n+1;j++) {
+                temp = a[i][j];
+                a[i][j] = a[k][j];
+                a[k][j] = temp;
+            } /*for j */
+        
+        for ( j=i+1;j<n;j++) {
+            temp= a[j][i]/a[i][i];
+            for ( k=i;k<n+1;k++)
+                a[j][k]=a[j][k]-1.0*temp*a[i][k];
+        } /* for j */
+    } /* for i */
+}/* gauss */
+
+void backsub(int n, double a[][MAXTotal1], double *y)
+{
+    int i,k;
+    y[n-1]= a[n-1][n]/a[n-1][n-1];
+    for(i=n-2;i>= 0;i--) {
+        y[i]= a[i][n];
+        for(k = n-1; k > i; k--)
+            y[i] = y[i] - a[i][k]*y[k];
+        y[i]=y[i]/a[i][i];
+    }
+}
+
+void sol(int Nelem, double IS[][MAXTotal1], double *solution, int *checksin )
+{
+/*    int i,j,k;*/
+    gauss(Nelem, IS, checksin);
+    backsub(Nelem, IS, solution);
+}
+
+
+/* for Abbas: END of some functions which were necessary in Ridge_MOE_EM are inserted here   */
+
+
+
+
+
+
+
 
 void Ridge_MOE_EM(double *resp,double *myX,int *constant, 
 double *myinitial_alpha0, double *myinitial_alpha, double *myinitial_beta1, 
 double *myinitial_beta2, double *myinitial_sigma, double *myridgepen_prop, double *myeps, double *myalpha,double *mybeta)
 {
 double eps=myeps[0];
-int nsize=constant[0], NCOV=constant[1], ONCOV1=constant[2], ONCOV2=constant[3],NMAX=constant[4],
+int nsize=constant[0], NCOV=constant[1],
 NCOMP=constant[5],Totaliter=constant[6], EM_maxiter=constant[7],i1,i2;
 
 //EM_maxiter  is defined by Vahid, previousely it was set to 15*//
 	
-int Total1 = (NCOMP*NCOV+NCOMP),MAXTotal1=Total1+1;
+    int Total1 = (NCOMP*NCOV+NCOMP);
+    /*MAXTotal1=Total1+1;*/
+    /* Be careful, I initialized MAXTotal1 in the beginning, you may need to change this value if you run another example*/
 
 double b10[NCOV],b20[NCOV];
 for (i1=0;i1<NCOV;i1++)
@@ -32,15 +116,13 @@ for (i1=0;i1<NCOV;i1++)
 //*double b10[NCOV]={0.9,0.5,0.5,2.1,0.7,0.6,0.5,0.5,0.5,0.5},b20[NCOV]={-0.9,0.7,0.5,3.2,0.5,0.6,0.5,0.5,0.5,0.5},
 //*b30[NCOV]={-0.9,0.7,0.5,3.2,0.5,0.6,0.5,0.5,0.5,0.5};
 double pi0=0.4, pi[NCOMP],sigma1;
-double Betahat[NCOV][NCOMP],initbeta[NCOV][NCOMP],optlam[NCOMP];
-double Hatpi[NCOMP],Hatsigma,initpi[NCOMP],Oraclbeta[NCOV][NCOMP],
-Oraclpi[NCOMP],initsigma,Orcsigma,STD[Total1],alpha0[NCOMP-1],alpha[NCOV][NCOMP-1],
+double Betahat[NCOV][NCOMP],initbeta[NCOV][NCOMP];
+double Hatpi[NCOMP],initpi[NCOMP],
+initsigma,alpha0[NCOMP-1],alpha[NCOV][NCOMP-1],
   Ebteda_alpha0[NCOMP-1],Ebteda_alpha[NCOV][NCOMP-1],
-initalpha0[NCOMP-1],initalpha[NCOV][NCOMP],Hatalpha[NCOV][NCOMP],Hatalpha0[NCOMP-1],optlam_mix[NCOMP-1],
-  Glob_Mat_pi[nsize][NCOMP],C=(log(12))/nsize,NEWmultX[NCOMP+1][nsize][NCOV];
-int selection[NCOV][NCOMP],Oraclevector[NCOMP][NCOV] ,
+initalpha0[NCOMP-1],initalpha[NCOV][NCOMP];
+int Oraclevector[NCOMP][NCOV] ,
   Oraclealpha[NCOMP-1][NCOV+1] ,
-selection2[NCOV][NCOMP-1],
   ONCOV[NCOMP] ,ONCOV_alpha[NCOMP-1] ;
 
   
@@ -88,87 +170,7 @@ for(i1=0;i1<(NCOV+1);i1++)
 		}
 	}
 	
-  /*changes hapenned for initialization of vectors alpha, Ebteda_alpha,  Oraclevector, Oraclealpha,
-  ONCOV, ONCOV_alpha
-  
-/* for Abbas: some functions which were necessary in Ridge_MOE_EM are inserted here   */
 
-void maxabs(int row, int n, double a[][MAXTotal1], int *checksin, int *maxrow)
-{
-	double max =0;
-	int loc_maxrow, loc_checksin;
-	int i;
-
-	loc_maxrow=row;
-	loc_checksin = 1;
-	for (i= row; i<n ;i++) {
-		if ( fabs(a[i][row]) > max) {
-			max = fabs(a[i][row]);
-			loc_maxrow =i;
-		}
-
-		if (max == 0) {
-			/* printf(" matrix is singular \n"); */
-			loc_checksin = 0;
-			break;
-			/* exit(0); */
-		}
-	}
-
-	maxrow[0]   = loc_maxrow;
-	checksin[0] = loc_checksin;
-}
-
-void gauss(int n, double a[][MAXTotal1], int *checksin)
-{
-	int i,j,k;
-	int k_vec[1];
-	double temp;
-
-	k = 0;
-	for (i=0;i<n;i++) {
-	  maxabs(i, n, a, checksin, k_vec);
-		k=k_vec[0];
-
-		if (checksin[0] == 0) {
-		   break;
-		}
-		if ( k != i)
-			for ( j=i;j<n+1;j++) {
-				temp = a[i][j];
-				a[i][j] = a[k][j];
-				a[k][j] = temp;
-			} /*for j */
-
-		for ( j=i+1;j<n;j++) {
-			temp= a[j][i]/a[i][i];
-			for ( k=i;k<n+1;k++)
-				a[j][k]=a[j][k]-1.0*temp*a[i][k];
-		} /* for j */
-	} /* for i */
-}/* gauss */
-
-void backsub(int n, double a[][MAXTotal1], double *y)
-{
-	int i,k;
-	y[n-1]= a[n-1][n]/a[n-1][n-1];
-	for(i=n-2;i>= 0;i--) {
-		y[i]= a[i][n];
-		for(k = n-1; k > i; k--)
-			y[i] = y[i] - a[i][k]*y[k];
-		y[i]=y[i]/a[i][i];
-	}
-}
-
-void sol(int Nelem, double IS[][MAXTotal1], double *solution, int *checksin )
-{
-	int i,j,k;
-	gauss(Nelem, IS, checksin);
-	backsub(Nelem, IS, solution);
-}
-  
-  
-/* for Abbas: END of some functions which were necessary in Ridge_MOE_EM are inserted here   */
 
 
 /* for Abbas: inserts myX values to multX. multX is actually the design matrix of your code */
@@ -185,12 +187,12 @@ for (jcount=0;jcount<NCOV;jcount++)
 	}
 /* for Abbas: END of inserts myX values to multX. multX is actually the design matrix of your code */
 
-  int i=0,j=0,k1,niter1=0,l,check1[1],u,check2[1],niter2=0,Tavan;
+  int i=0,j=0,k1,niter1=0,l,check1[1],check2[1],niter2=0,Tavan;
   double sumi=0,sumi1=0,sumi2=0,mui=0,deni,beta0[NCOV][NCOMP],W[nsize][NCOMP],
     phi[nsize][NCOMP],newbeta[NCOV][NCOMP],XTWY[NCOV],XTWX[NCOV][NCOV],miui[nsize][NCOMP], 
 	jamconvg2 = 0.0,
-    ComMat[Total1][Total1+1],solution1[Total1],jamconvg,newpi[NCOMP],sumwi[NCOMP],
-    newsigma,pii[NCOMP],sig1,Mat_pi[nsize][NCOMP],newalpha0[NCOMP-1],newalpha[NCOV][NCOMP-1],
+    ComMat[Total1][Total1+1],solution1[Total1],jamconvg,sumwi[NCOMP],
+    newsigma,sig1,Mat_pi[nsize][NCOMP],newalpha0[NCOMP-1],newalpha[NCOV][NCOMP-1],
     one_X[nsize][NCOV+1],oneXTWY[NCOV+1],oneXTWX[NCOV+1][NCOV+1],oneComMat[Total1][Total1+1],
     onesolution1[Total1],oldalpha0[NCOMP-1],oldalpha[NCOV][NCOMP-1],Max_Log_like_logistic,
     Log_like_logistic,old_oldalpha[NCOV][NCOMP-1],ridge[NCOV+1];
@@ -560,7 +562,6 @@ for (jcount=0;jcount<NCOV;jcount++)
 	{
 		printf("X[i=%d, j=%d]=%f \n",icount+1,jcount+1,multX[icount][jcount]);
 	}
-
 */
 
 
